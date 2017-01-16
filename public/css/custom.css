@@ -1,0 +1,76 @@
+.radio, .checkbox {
+	margin-top: 0px;
+}
+.control-label {
+	font-weight: normal;
+}
+.control-label.control-value {
+	font-weight: 600;	
+	text-align: left;
+}
+.top-row {
+	height: 75px;
+    border-bottom: 1px solid #eee;
+}
+.top-row p {
+	color: #999;
+    font-size: 16px;
+	padding-top: 24px;
+}
+.menu > li > span {
+	padding: 0 10px;
+}
+.bank-menu {
+	display: inline-block;
+    margin-top: 14px;
+    margin-right: 10px;
+    float: left;
+    list-style: none;
+    padding: 0;
+}
+.bank-menu>li>a {
+	color: #fff;
+	text-decoration: none;
+	font-size: 20px;
+}
+.bank-menu .dropdown-menu>li>a {
+	padding: 6px 24px;
+}
+.bank-menu .dropdown-menu>li>a>img {
+	width: 50px;
+	height: auto;
+	padding-right: 12px;
+}
+.text-blue {
+	color: #30a5ff !important;
+}
+.text-green {
+	color: #8ad919 !important;
+}
+.text-yellow {
+	color: #ffb53e !important;
+}
+.text-red {
+	color: #f9243f !important;
+}
+.modal-content {
+	border-radius: 18px;
+}
+.btn {
+	border-radius: 50px;
+	outline: none !important;
+}
+.text-upper {
+	text-transform: uppercase;
+}
+#signature {
+	border: dashed 1px #eee;
+    margin-bottom: 20px;
+}
+.signature {
+	border: dashed 1px #e5e5e5;
+}
+img.logo {
+	width: 50px;
+	margin-right: 15px;
+}

@@ -1,0 +1,10 @@
+<div class="modal-header">
+    <h3 class="modal-title">Add comment to document "{{vm.selectedDocument.name}}"</h3>
+</div>
+<div class="modal-body">
+    <textarea ng-model="vm.message" class="form-control" rows="6"></textarea>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="vm.submit()">Submit</button>
+    <button class="btn btn-default" type="button" ng-click="vm.cancel()">Cancel</button>
+</div>

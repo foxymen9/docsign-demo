@@ -1,0 +1,5 @@
+﻿{
+    "connectionString": "mongodb://localhost:27017/docsign",
+    "apiUrl": "http://localhost:3000/api",
+    "secret": "51c941d4724adf21076be8f3ed5793f2"
+}

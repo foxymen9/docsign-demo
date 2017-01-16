@@ -1,0 +1,81 @@
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-header">Employee Documents</h1>
+	</div>
+</div><!--/.row-->
+		
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel">
+			<div class="panel-heading panel-blue-heading">
+				<svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> {{selectedEmployee.name}}
+			</div>
+			<div class="panel-body">
+				
+				<form role="form" class="form-horizontal" action="screen2.html">
+					<div class="form-group">
+						<label class="col-md-2 control-label">Name: </label>
+						<label class="col-md-4 control-label control-value">{{selectedEmployee.name}}</label>
+						<label class="col-md-2 control-label">Designation: </label>
+						<label class="col-md-4 control-label control-value">{{selectedEmployee.designation}}</label>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">Employee Number: </label>
+						<label class="col-md-4 control-label control-value">{{selectedEmployee.number}}</label>
+						<label class="col-md-2 control-label"></label>
+						<label class="col-md-4 control-label control-value"></label>
+					</div>
+				</form>
+			</div>
+			<div class="panel-footer">	
+				<table class="table table-responsive" data-toggle="table" id="table-style">
+					<thead>
+						<tr>
+							<th >Name</th>
+							<th >File</th>
+							<th >Yes</th>
+							<th >No</th>
+							<th ></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="document in vm.documents">
+							<td>{{document.name}}</td>
+							<td><a href="{{document.fileUrl}}" target="_blank">{{document.fileUrl}}</a></td>
+							<td width="5%">
+								<div class="radio">
+									<label>
+										<input type="radio" name="option{{document.id}}" value="yes{{document.id}}" {{document.status != 'success'? 'checked': ''}} ng-click="vm.accept(document.id)">&nbsp;
+									</label>
+								</div>
+							</td>
+							<td width="5%">
+								<div class="radio">
+									<label>
+										<input type="radio" name="option{{document.id}}" value="no{{document.id}}" {{document.status != 'fail'? 'checked': ''}} ng-click="vm.reject(document.id)">&nbsp;
+									</label>
+								</div>
+							</td>
+							<td width="5%">
+								<!-- <button type="button" ng-if="document.status != 'accepted'" ng-click="vm.accept(document.id)" class="btn btn-sm btn-primary">Accept </button>
+
+								<button type="button" ng-if="document.status != 'rejected'" ng-click="vm.reject(document.id)" class="btn btn-sm btn-danger">Reject </button> -->
+								<button type="button" ng-click="vm.addComment(document.id)" class="btn btn-sm btn-default">Comment </button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<hr class="separator" />
+
+				<div class="row">
+					<div class="col-md-12 widget-right">
+						<a ui-sref="home" class="btn btn-lg btn-default">Back </a>
+						<a ui-sref="signature" class="btn btn-lg btn-primary">Continue </a>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div><!-- /.col-->
+</div><!-- /.row -->

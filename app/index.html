@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/imgs/favicon.png">
+
+    <title>DocSign</title>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link href="/css/custom.css" rel="stylesheet">
+
+    <!--Icons-->
+    <script src="/js/lumino.glyphs.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    <!-- header -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="background-color:{{selectedBank.color}}">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" ui-sref="home">
+                    <img ng-src="{{selectedBank.logo}}" class="bank-logo"/>
+                </a>
+                <ul class="bank-menu">
+                    <li uib-dropdown>
+                        <a href uib-dropdown-toggle>{{selectedBank.name}} <span class="caret"></span></a>
+                        <ul uib-dropdown-menu class="dropdown-menu" role="menu">
+                            <li ng-repeat="bank in banks" ng-click="selectBank(bank)">
+                                <a href style="color:{{bank.color}}"><img ng-src="{{bank.logo}}" /> {{bank.name}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="user-menu">
+                    <li uib-dropdown class="pull-right">
+                        <a href uib-dropdown-toggle ng-if="currentUser != null"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> {{currentUser.firstName}} {{currentUser.lastName}} <span class="caret"></span></a>
+                        <ul uib-dropdown-menu class="dropdown-menu" role="menu">
+                            <li><a href="/banks"><svg class="glyph stroked gear"><use xlink:href="#stroked-gear"></use></svg> Bank Management</a></li>
+                            <li><a href="/upload"><svg class="glyph stroked paperclip"><use xlink:href="#stroked-paperclip"/></svg> Upload Document</a></li>
+                            <li><hr class="separator" /></li>
+                            <li><a ui-sref="account"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> Account</a></li>
+                            <li><a href="/login"><svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+                            
+        </div><!-- /.container-fluid -->
+    </nav>
+        
+    <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+        <form role="search">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search" ng-model="searchEmployee">
+            </div>
+        </form>
+        <ul class="nav menu">
+            <li><span>Select Employee:</span></li>
+            <li role="presentation" class="divider"></li>
+            
+            <li class="parent ">
+                <a href ng-click="pendingCollapsed = !pendingCollapsed">
+                    <span data-toggle="collapse" class="text-yellow"><svg class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg> Pending</span>
+                </a>
+                <ul class="children" uib-collapse="pendingCollapsed">
+                    <li ng-repeat="employee in employees | filter:filterPending" ng-click="selectEmployee(employee)" ng-class="{'active': employee.id == selectedEmployee.id}">
+                        <a ui-sref="home"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> {{employee.name}}</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="parent ">
+                <a href ng-click="partialCompletedCollapsed = !partialCompletedCollapsed">
+                    <span data-toggle="collapse" class="text-blue"><svg class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg> Partially Completed</span>
+                </a>
+                <ul class="children" uib-collapse="partialCompletedCollapsed">
+                    <li ng-repeat="employee in employees | filter:filterPartialCompleted" ng-click="selectEmployee(employee)" ng-class="{'active': employee.id == selectedEmployee.id}">
+                        <a ui-sref="home"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> {{employee.name}}</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="parent ">
+                <a href ng-click="completedCollapsed = !completedCollapsed">
+                    <span data-toggle="collapse" class="text-green"><svg class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg> Completed</span>
+                </a>
+                <ul class="children" uib-collapse="completedCollapsed">
+                    <li ng-repeat="employee in employees | filter:filterCompleted" ng-click="selectEmployee(employee)" ng-class="{'active': employee.id == selectedEmployee.id}">
+                        <a ui-sref="home"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> {{employee.name}}</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="parent ">
+                <a href ng-click="rejectedCollapsed = !rejectedCollapsed">
+                    <span data-toggle="collapse" class="text-red"><svg class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg> Rejected</span>
+                </a>
+                <ul class="children" uib-collapse="rejectedCollapsed">
+                    <li ng-repeat="employee in employees | filter:filterRejected" ng-click="selectEmployee(employee)" ng-class="{'active': employee.id == selectedEmployee.id}">
+                        <a ui-sref="home"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> {{employee.name}}</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+    </div><!--/.sidebar-->
+
+    <!-- main -->
+    <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">           
+        <div class="top-row">
+            <p>Data is being sought by <span style="color:{{selectedBank.color}}">{{selectedBank.name}}</span> on behalf of Mr.Customer</p>
+        </div><!--/.row-->
+
+        <div class="flash-message" ng-if="flash">
+            <div class="{{'alert bg-' + flash.type}}" ng-bind="flash.message"></div>
+        </div>
+    
+        <main ui-view></main>
+    </div>
+
+    <!-- footer -->
+    <footer></footer>
+
+    <!-- external scripts -->
+    <!-- <script src="/js/jquery-1.11.1.min.js"></script> -->
+    <!-- <script src="/js/bootstrap.min.js"></script> -->
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script> -->
+    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script> -->
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+    <script src="/bower_components/signature_pad/signature_pad.min.js"></script>
+    <script src="/bower_components/angular-signature/src/signature.js"></script>
+
+    <!-- application scripts -->
+    <script src="app.js"></script>
+    <script src="services/user.service.js"></script>
+    <script src="services/flash.service.js"></script>
+    <script src="services/document.service.js"></script>
+    <script src="controllers/home.controller.js"></script>
+    <script src="controllers/account.controller.js"></script>
+    <script src="controllers/documents.controller.js"></script>
+    <script src="controllers/signature.controller.js"></script>
+    
+</body>
+</html>
