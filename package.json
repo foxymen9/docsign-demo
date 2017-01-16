@@ -4,7 +4,7 @@
   "description": "MEAN Stack Document Sign Application",
   "repository": {
     "type": "git",
-    "url": "https://github.com/arangde/docsign-mean.git"
+    "url": "https://github.com/foxymen9/docsign-demo.git"
   },
   "license": "MIT",
   "scripts": {
