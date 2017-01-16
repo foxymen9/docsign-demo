@@ -3,8 +3,7 @@
 MEAN Stack Document Signature Application
 
 ## Start & Run
-    ```
-		bower install
+    	bower install
 		npm install
 		node server
-	```
+	
