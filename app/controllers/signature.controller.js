@@ -24,17 +24,18 @@
         vm.submit = function() {
             var hasError = true;
 
-            if(!vm.comment) {
-                FlashService.Error('Please input comment.');
-                hasError = false;
-            }
-            else if(vm.signatureUrl == '') {
+            // if(!vm.comment) {
+            //     FlashService.Error('Please input comment.');
+            //     hasError = false;
+            // }
+            // else 
+            if(vm.signatureUrl == '') {
                 FlashService.Error('Please add signature.');
                 hasError = false;
             }
 
             if(hasError) {
-                DocumentService.AddSignature(vm.signatureUrl)
+                DocumentService.AddSignature(vm.signatureUrl, $rootScope.selectedEmployee.name)
                 .then(function (result) {
                     if(result) {
                         $window.open(result, "_blank");

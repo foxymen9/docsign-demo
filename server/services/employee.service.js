@@ -5,39 +5,22 @@ var bcrypt = require('bcryptjs');
 var Q = require('q');
 var mongo = require('mongoskin');
 var db = mongo.db(config.connectionString, { native_parser: true });
-db.bind('documents');
+db.bind('employees');
 
 var service = {};
 
 service.findAll = findAll;
-service.create = create;
 
 module.exports = service;
 
 function findAll() {
     var deferred = Q.defer();
 
-    db.documents.find({}).toArray(function(err, documents) {
+    db.employees.find({}).toArray(function (err, employees) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
-        deferred.resolve(documents);
+        deferred.resolve(employees);
     });
-
-    return deferred.promise;
-}
-
-function create(params) {
-    var deferred = Q.defer();
-
-    var document = params;
-
-    db.documents.insert(
-        document,
-        function (err, doc) {
-            if (err) deferred.reject(err.name + ': ' + err.message);
-
-            deferred.resolve(doc);
-        });
 
     return deferred.promise;
 }

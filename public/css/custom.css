@@ -41,6 +41,9 @@
 	height: auto;
 	padding-right: 12px;
 }
+.user-menu .dropdown-menu>li>a {
+	padding: 10px 15px;
+}
 .text-blue {
 	color: #30a5ff !important;
 }
@@ -69,6 +72,7 @@
 }
 .signature {
 	border: dashed 1px #e5e5e5;
+	margin: 0 auto;
 }
 img.logo {
 	width: 50px;

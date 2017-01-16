@@ -6,7 +6,7 @@
         .controller('AddDocCommentModalController', AddDocCommentModalController)
         .controller('DocumentsController', Controller);
 
-    function Controller(UserService, $rootScope, $uibModal) {
+    function Controller(UserService, DocumentService, $rootScope, $uibModal) {
         var vm = this;
 
         vm.documents = [];
@@ -15,15 +15,9 @@
         initController();
 
         function initController() {
-        
-            for(var i=0; i<1; i++) {
-                vm.documents.push({
-                    id: i,
-                    name: 'Document' + (i+1),
-                    fileUrl: '/temp/template.docx',
-                    status: ''
-                });
-            }
+            DocumentService.GetAll().then(function (documents) {
+                vm.documents = documents;
+            });
         }
 
         vm.accept = function(documentId) {
@@ -52,11 +46,9 @@
             vm.modalOpen = true;
 
             modalInstance.result.then(function (result) {
-                console.log('Comment added', result.selectedDocument, result.message);
                 vm.modalOpen = false;
             }, function () {
                 vm.modalOpen = false;
-                console.log('modal-component dismissed');
             });
         };
     }

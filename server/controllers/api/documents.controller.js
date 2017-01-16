@@ -11,9 +11,9 @@ var utils = require('server/utils');
 var documentService = require('server/services/document.service');
 
 // routes
+router.get('/', getAllDocuments);
 router.post('/signature', addSignature);
 router.post('/upload', upload);
-router.get('/', getAllDocuments);
 
 module.exports = router;
 
@@ -23,6 +23,7 @@ var signedDocfile = '/temp/template_signed.docx';
 
 function addSignature(req, res) {
     var signature = req.body.signature;
+    var employeeName = req.body.employeeName;
 
     try {
         var imageBuffer = utils.decodeBase64Image(signature);
@@ -46,7 +47,7 @@ function addSignature(req, res) {
         var docx = new Docxtemplater()
             .attachModule(imageModule)
             .loadZip(zip)
-            .setData({signature: 'public' + signatureFilePath})
+            .setData({signature: 'public' + signatureFilePath, employee_name: employeeName})
             .render();
 
         var buffer= docx

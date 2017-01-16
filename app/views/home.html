@@ -19,10 +19,10 @@
 						</div>
 					</div>
 					<hr class="separator" />
-					<div class="employee-options" ng-repeat="option in employeeOptions track by $index">
+					<div class="employee-options" ng-repeat="option in vm.employeeOptions track by $index">
 						<div class="form-group">
-							<label class="col-md-4 col-sm-6 control-label">{{option}}: </label>
-							<label class="col-md-5 col-sm-6 control-label control-value">{{selectedEmployee.name}}</label>
+							<label class="col-md-4 col-sm-6 control-label">{{option.name}}: </label>
+							<label class="col-md-5 col-sm-6 control-label control-value">{{selectedEmployee[option.key]}}</label>
 							<div class="col-md-1 col-sm-6">
 								<div class="radio">
 									<label>
@@ -32,7 +32,7 @@
 							</div>
 							<div class="col-md-1 col-sm-6">
 								<div class="radio">
-									<label ng-click="vm.openModal('Name')">
+									<label>
 										<input type="radio" name="optionsName{{$index}}" id="optionsName{{$index}}_n" value="n">No
 									</label>
 								</div>

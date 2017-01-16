@@ -77,7 +77,7 @@
                     <span data-toggle="collapse" class="text-yellow"><svg class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg> Pending</span>
                 </a>
                 <ul class="children" uib-collapse="pendingCollapsed">
-                    <li ng-repeat="employee in employees | filter:filterPending" ng-click="selectEmployee(employee)" ng-class="{'active': employee.id == selectedEmployee.id}">
+                    <li ng-repeat="employee in employees | filter:filterPending" ng-click="selectEmployee(employee)" ng-class="{'active': employee._id == selectedEmployee._id}">
                         <a ui-sref="home"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> {{employee.name}}</a>
                     </li>
                 </ul>
@@ -87,7 +87,7 @@
                     <span data-toggle="collapse" class="text-blue"><svg class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg> Partially Completed</span>
                 </a>
                 <ul class="children" uib-collapse="partialCompletedCollapsed">
-                    <li ng-repeat="employee in employees | filter:filterPartialCompleted" ng-click="selectEmployee(employee)" ng-class="{'active': employee.id == selectedEmployee.id}">
+                    <li ng-repeat="employee in employees | filter:filterPartialCompleted" ng-click="selectEmployee(employee)" ng-class="{'active': employee._id == selectedEmployee._id}">
                         <a ui-sref="home"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> {{employee.name}}</a>
                     </li>
                 </ul>
@@ -97,7 +97,7 @@
                     <span data-toggle="collapse" class="text-green"><svg class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg> Completed</span>
                 </a>
                 <ul class="children" uib-collapse="completedCollapsed">
-                    <li ng-repeat="employee in employees | filter:filterCompleted" ng-click="selectEmployee(employee)" ng-class="{'active': employee.id == selectedEmployee.id}">
+                    <li ng-repeat="employee in employees | filter:filterCompleted" ng-click="selectEmployee(employee)" ng-class="{'active': employee._id == selectedEmployee._id}">
                         <a ui-sref="home"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> {{employee.name}}</a>
                     </li>
                 </ul>
@@ -107,7 +107,7 @@
                     <span data-toggle="collapse" class="text-red"><svg class="glyph stroked chevron-down"><use xlink:href="#stroked-chevron-down"></use></svg> Rejected</span>
                 </a>
                 <ul class="children" uib-collapse="rejectedCollapsed">
-                    <li ng-repeat="employee in employees | filter:filterRejected" ng-click="selectEmployee(employee)" ng-class="{'active': employee.id == selectedEmployee.id}">
+                    <li ng-repeat="employee in employees | filter:filterRejected" ng-click="selectEmployee(employee)" ng-class="{'active': employee._id == selectedEmployee._id}">
                         <a ui-sref="home"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> {{employee.name}}</a>
                     </li>
                 </ul>
@@ -150,6 +150,8 @@
     <script src="services/user.service.js"></script>
     <script src="services/flash.service.js"></script>
     <script src="services/document.service.js"></script>
+    <script src="services/employee.service.js"></script>
+    <script src="services/bank.service.js"></script>
     <script src="controllers/home.controller.js"></script>
     <script src="controllers/account.controller.js"></script>
     <script src="controllers/documents.controller.js"></script>

@@ -10,14 +10,24 @@
                 <% if(locals.success) { %>
                     <div class="alert bg-success" role="alert"><svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <%= success %></div>
                 <% } %>
-                <form method="post" action="/upload" enctype="multipart/form-data">
+                <form method="post" action="/upload" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group">
-                        <label for="firstName">Document File(*.docx)</label>
-                        <input type="file" name="uploadFile" id="uploadFile" />
+                        <label for="documentName" class="col-sm-4 control-label">Document Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="documentName" id="documentName" class="form-control" value="<%= locals.documentName || '' %>" required />
+                        </div>    
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Upload</button>
-                        <a href="/login" class="btn btn-link">Cancel to login</a>
+                        <label for="uploadFile" class="col-sm-4 control-label">File (*.docx)</label>
+                        <div class="col-sm-8">
+                            <input type="file" name="uploadFile" id="uploadFile" />
+                        </div>    
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                            <a href="/" class="btn btn-link">Back to home</a>
+                        </div>    
                     </div>
                 </form>
             </div>

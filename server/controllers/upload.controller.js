@@ -2,8 +2,7 @@
 var router = express.Router();
 var request = require('request');
 var config = require('config.json');
-var fs = require('fs');
-var multer = require('multer');
+var path = require('path');
 
 var documentService = require('server/services/document.service');
 
@@ -16,69 +15,35 @@ router.get('/', function (req, res) {
 });
 
 router.post('/', function (req, res) {
-    /*
-    if(req.files.uploadFile.name.indexOf('.docx') !== -1) {
-        res.render('upload', {error: "Please upload docx file."});
+    var documentName = req.body.documentName;
+
+    if(!req.files.uploadFile) {
+        res.render('upload', {error: "Please upload a docx file.", documentName: documentName});
     }
     else {
-        fs.readFile(req.files.uploadFile.path, function(readErr, data) {
-            if(readErr) {
-                return res.render('upload', {error: readErr.message});
-            }
-
+        var uploadFile = req.files.uploadFile;
+        
+        if(path.extname(uploadFile.name) !== '.docx') {
+            res.render('upload', {error: "Please upload a docx file.", documentName: documentName});
+        }
+        else {
             var newPath = '/uploads/documents/' + req.files.uploadFile.name;
-            fs.writeFile('public' + newPath, data, function(writeErr) {
+            uploadFile.mv('public' + newPath, function(writeErr) {
                 if(writeErr) {
-                    return res.render('upload', {error: writeErr.message});
+                    res.render('upload', {error: writeErr.message, documentName: documentName});
                 }
                 else {
-                    documentService.create(newPath)
+                    documentService.create({name: documentName, url: newPath})
                         .then(function (document) {
-                            req.session.success = 'Upload successful';
-                            return res.render('upload');
+                            res.render('upload', {success: 'Upload successful'});
                         })
                         .catch(function (err) {
-                            res.render('upload', {error: err.message});
+                            res.render('upload', {error: err.message, documentName: documentName});
                         });
                 }
             });
-        });
+        }
     }
-    */
-    
-    var newPath = '';
-    var storage = multer.diskStorage({
-        destination: function(req, file, callback) {
-            callback(null, 'public/uploads/documents');
-        },
-        filename: function(req, file, callback) {
-            newPath = '/uploads/documents/' + file.originalname;
-            callback(null, file.originalname);
-        },
-        onFileUploadStart: function(file) {
-            console.log('file.originalname', file.originalname.indexOf('.docx'));
-            if(file.originalname.indexOf('.docx') === -1) {
-                return false;
-            }
-        }
-    });
-    var upload = multer({storage: storage}).single('uploadFile');
-
-    upload(req, res, function(err) {
-        if(err) {
-            return res.render('upload', {error: err.message});
-        }
-        else {
-            documentService.create(newPath)
-                .then(function (document) {
-                    req.session.success = 'Upload successful';
-                    return res.render('upload');
-                })
-                .catch(function (err) {
-                    res.render('upload', {error: err.message});
-                });
-        }
-    });
     
 });
 

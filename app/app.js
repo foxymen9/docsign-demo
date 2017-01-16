@@ -41,7 +41,7 @@
             });
     }
 
-    function run($http, $rootScope, $window, UserService) {
+    function run($http, $rootScope, $window, UserService, BankService, EmployeeService) {
         // add JWT token as default auth header
         $http.defaults.headers.common['Authorization'] = 'Bearer ' + $window.jwtToken;
 
@@ -50,89 +50,6 @@
             $rootScope.activeTab = toState.data.activeTab;
         });
 
-        let empoyeeOptions = {
-            joinDate: new Date(),
-            designation: '',
-            department: '',
-            address: '',
-            permanentAddress: '',
-            phoneNumber: '012-3456-7890',
-            salary: '',
-            number: 100000,
-            loanType: '',
-            loanAmount: ''
-        };
-
-        const options = [
-            "Name as per passport",
-            "Nationality",
-            "Passport Number",
-            "Passport Expiry",
-            "Idbara No.",
-            "Visa Number",
-            "Visa Entry",
-            "Country of Origin",
-            "Date of Birth",
-            "Mothers Maiden Name",
-            "Marital Status",
-            "Number of Dependants",
-            "Education",
-            "Personal reference in UAE",
-            "Residence Building Name",
-            "Residence Building Number",
-            "Street",
-            "Nearest Landmark",
-            "Emirate",
-            "Home Tel No",
-            "Mobile Number",
-            "Company Name",
-            "Designation",
-            "Employed Since",
-            "Company Building Name",
-            "Company Building Number",
-            "Street",
-            "Nearest Landmark",
-            "Emirate",
-            "Company Phone Number",
-            "PO Box Number",
-            "email ID",
-            "Trade Licence Number",
-            "Trade licence issue date",
-            "Trade licence expiry date",
-            "Basic Salary",
-            "Allowances",
-            "Commission (Average)",
-            "Accrued end of service benefits",
-            "Other co.benefits - Car",
-            "Other co.benefits - Childrens education",
-            "Other co.benefits - House",
-            "Other co.benefits - Bonus",
-            "Other co.benefits - Medical Care",
-            "Total Monthly Salary",
-            "Bank with which the account number of the business along with account number",
-            "Monthly Income of the Business",
-            "Monthly expenses of the business",
-            "Any Other Monthly Income",
-            "ADCB Account type",
-            "Account Number",
-            "Credit Card Number if any",
-            "Car Loan",
-            "Other Loans if any",
-            "Purpose of Loan",
-            "Loan Amount",
-            "Interest Rate",
-            "No. of Instalments",
-            "Loan start Date",
-            "Mode of Payment",
-            "Processing Fee",
-            "Insurance Fee",
-            "EMI / Month",
-            "EMI End date"
-        ];
-        $rootScope.employeeOptions = options;
-
-        const names = ["Srirama Murthy", "Lakshman Rao", "Bharat Hegde", "Shatrugna Singh", "Ghouse Basha", "Antony Gonsalves", "David Crowe", "Donald Duck"];
-
         $rootScope.searchEmployee = '';
         $rootScope.partialCompletedCollapsed = true;
         $rootScope.pendingCollapsed = true;
@@ -140,42 +57,40 @@
         $rootScope.rejectedCollapsed = true;
 
         $rootScope.employees = [];
-        for(var i=1; i<9; i++) {
-            $rootScope.employees.push(Object.assign({}, empoyeeOptions, {id: i, name: names[i-1], number: empoyeeOptions.number + i}));
-        }
-        $rootScope.selectedEmployee = $rootScope.employees[0];
+        EmployeeService.GetAll().then(function (employees) {
+            $rootScope.employees = employees;
+            $rootScope.selectedEmployee = employees[0];
+        });
         
         $rootScope.selectEmployee = function(employee) {
             $rootScope.selectedEmployee = employee;
-            // $window.location = '/#';
         }
 
         $rootScope.filterPending = function(employee) {
-            return filterEmployee(employee, 0);
+            return filterEmployee(employee, "");
         }
         $rootScope.filterPartialCompleted = function(employee) {
-            return filterEmployee(employee, 1);
+            return filterEmployee(employee, "partial-completed");
         }
         $rootScope.filterCompleted = function(employee) {
-            return filterEmployee(employee, 2);
+            return filterEmployee(employee, "completed");
         }
         $rootScope.filterRejected = function(employee) {
-            return filterEmployee(employee, 3);
+            return filterEmployee(employee, "rejected");
         }
 
         var filterEmployee = function(employee, status) {
-            return (employee.name.indexOf($rootScope.searchEmployee) !== -1 && employee.id % 4 == status);
+            return (employee.status.toLowerCase() == status && employee.name.indexOf($rootScope.searchEmployee) !== -1);
         }
 
-        $rootScope.banks = [
-            { name: 'AAA Bank', logo: 'http://placehold.it/50/FFA534/fff?text=AAA+Bank', color: '#c64714' },
-            { name: 'XYZ Bank', logo: 'http://placehold.it/50/9c27b0/fff?text=XYZ+Bank', color: '#9368E9' }
-        ];
-        $rootScope.selectedBank = $rootScope.banks[0];
-
+        $rootScope.banks = [];
+        BankService.GetAll().then(function (banks) {
+            $rootScope.banks = banks;
+            $rootScope.selectedBank = banks[0];
+        });
+        
         $rootScope.selectBank = function(bank) {
             $rootScope.selectedBank = bank;
-            // $window.location = '/#';
         }
 
         $rootScope.currentUser = null;

@@ -4,8 +4,8 @@ var app = express();
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var expressJwt = require('express-jwt');
+var fileUpload = require('express-fileupload');
 var config = require('config.json');
-var multer = require('multer');
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({ secret: config.secret, resave: false, saveUninitialized: true }));
 app.use(express.static(__dirname + '/../public'));
-// app.use(multer({dest: 'public/uploads/'}));
+app.use(fileUpload());
 
 // use JWT auth to secure the api
 app.use('/api', expressJwt({ secret: config.secret }).unless({ path: ['/api/users/authenticate', '/api/users/register'] }));
@@ -26,6 +26,8 @@ app.use('/banks', require('./controllers/banks.controller'));
 app.use('/app', require('./controllers/app.controller'));
 app.use('/api/users', require('./controllers/api/users.controller'));
 app.use('/api/documents', require('./controllers/api/documents.controller'));
+app.use('/api/employees', require('./controllers/api/employees.controller'));
+app.use('/api/banks', require('./controllers/api/banks.controller'));
 
 // make '/app' default route
 app.get('/', function (req, res) {
@@ -34,5 +36,5 @@ app.get('/', function (req, res) {
 
 // start server
 var server = app.listen(3000, function () {
-    console.log('Server listening at http://' + server.address().address + ':' + server.address().port);
+    console.log('Server listening at http://localhost:' + server.address().port);
 });
