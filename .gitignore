@@ -29,3 +29,4 @@ npm-debug.log
 public/bower_components
 public/uploads/documents/*
 public/uploads/logos/*
+public/temp/*
