@@ -34,9 +34,7 @@
 						<tr>
 							<th >Name</th>
 							<th >File</th>
-							<th >Yes</th>
-							<th >No</th>
-							<th ></th>
+							<th colspan="3">Matches with our records</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -46,14 +44,14 @@
 							<td width="5%">
 								<div class="radio">
 									<label>
-										<input type="radio" name="option{{document.id}}" value="yes{{document.id}}" {{document.status != 'success'? 'checked': ''}} ng-click="vm.accept(document.id)">&nbsp;
+										<input type="radio" name="option{{document._id}}" value="yes{{document._id}}" {{document.status != 'success'? 'checked': ''}} ng-click="vm.accept(document)"> Yes
 									</label>
 								</div>
 							</td>
 							<td width="5%">
 								<div class="radio">
 									<label>
-										<input type="radio" name="option{{document.id}}" value="no{{document.id}}" {{document.status != 'fail'? 'checked': ''}} ng-click="vm.reject(document.id)">&nbsp;
+										<input type="radio" name="option{{document._id}}" value="no{{document._id}}" {{document.status != 'fail'? 'checked': ''}} ng-click="vm.reject(document)"> No
 									</label>
 								</div>
 							</td>
@@ -61,7 +59,7 @@
 								<!-- <button type="button" ng-if="document.status != 'accepted'" ng-click="vm.accept(document.id)" class="btn btn-sm btn-primary">Accept </button>
 
 								<button type="button" ng-if="document.status != 'rejected'" ng-click="vm.reject(document.id)" class="btn btn-sm btn-danger">Reject </button> -->
-								<button type="button" ng-click="vm.addComment(document.id)" class="btn btn-sm btn-default">Comment </button>
+								<button type="button" ng-click="vm.addComment(document)" class="btn btn-sm btn-default">Comment </button>
 							</td>
 						</tr>
 					</tbody>

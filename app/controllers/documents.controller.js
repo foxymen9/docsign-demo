@@ -20,15 +20,17 @@
             });
         }
 
-        vm.accept = function(documentId) {
-            vm.documents[documentId].status = 'success';
+        vm.accept = function(document) {
+            var index = _.findIndex(vm.documents, function(o) { return o._id == document._id; });
+            vm.documents[index].status = 'success';
         }
 
-        vm.reject = function(documentId) {
-            vm.documents[documentId].status = 'fail';
+        vm.reject = function(document) {
+            var index = _.findIndex(vm.documents, function(o) { return o._id == document._id; });
+            vm.documents[index].status = 'fail';
         }       
 
-        vm.addComment = function(documentId) {
+        vm.addComment = function(document) {
             if(vm.modalOpen) return;
 
             var modalInstance = $uibModal.open({
@@ -38,7 +40,7 @@
                 controllerAs: 'vm',
                 resolve: {
                     selectedDocument: function () {
-                        return vm.documents[documentId];
+                        return document;
                     }
                 }
             });
