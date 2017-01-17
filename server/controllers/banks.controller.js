@@ -11,19 +11,7 @@ router.get('/', function (req, res) {
     delete req.session.success;
     delete req.session.error;
 
-    bankService.findAll()
-        .then(function (banks) {
-            if (banks) {
-                viewData.banks = banks;
-            } else {
-                viewData.banks = [];
-            }
-            res.render('banks', viewData);
-        })
-        .catch(function (err) {
-            viewData.error = err.message;
-            res.render('banks', viewData);
-        });
+    return render(req, res, viewData);
 });
 
 router.get('/delete/:bankId', function (req, res) {
@@ -34,7 +22,7 @@ router.get('/delete/:bankId', function (req, res) {
             return res.redirect('/banks');
         })
         .catch(function (err) {
-            res.render('banks', {error: err.message});
+            return render(req, res, {error: err.message});
         });
 });
 
@@ -43,20 +31,20 @@ router.post('/', function (req, res) {
     var color = req.body.color;
 
     if(!req.files.uploadFile) {
-        res.render('banks', {error: "Please upload a logo file.", bankName: bankName, color: color});
+        return render(req, res, {error: "Please upload a logo file.", bankName: bankName, color: color});
     }
     else {
         var uploadFile = req.files.uploadFile;
         var exts = ['.png', '.jpg', '.jpeg'];
         
         if(exts.indexOf(path.extname(uploadFile.name)) === -1) {
-            res.render('banks', {error: "Please upload a image file.", bankName: bankName, color: color});
+            return render(req, res, {error: "Please upload a image file.", bankName: bankName, color: color});
         }
         else {
             var newPath = '/uploads/logos/' + req.files.uploadFile.name;
             uploadFile.mv('public' + newPath, function(writeErr) {
                 if(writeErr) {
-                    res.render('banks', {error: writeErr.message, bankName: bankName, color: color});
+                    return render(req, res, {error: writeErr.message, bankName: bankName, color: color});
                 }
                 else {
                     bankService.create({name: bankName, logo: newPath, color: color})
@@ -64,7 +52,7 @@ router.post('/', function (req, res) {
                             return res.redirect('/banks');
                         })
                         .catch(function (err) {
-                            res.render('banks', {error: err.message, bankName: bankName, color: color});
+                            return render(req, res, {error: err.message, bankName: bankName, color: color});
                         });
                 }
             });
@@ -72,6 +60,22 @@ router.post('/', function (req, res) {
     }
     
 });
+
+function render(req, res, renderData) {
+    bankService.findAll()
+        .then(function (banks) {
+            if (banks) {
+                renderData.banks = banks;
+            } else {
+                renderData.banks = [];
+            }
+            res.render('banks', renderData);
+        })
+        .catch(function (err) {
+            renderData.error = err.message;
+            res.render('banks', renderData);
+        });
+}
 
 
 module.exports = router;

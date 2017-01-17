@@ -11,6 +11,7 @@ var service = {};
 
 service.findAll = findAll;
 service.create = create;
+service.delete = _delete;
 
 module.exports = service;
 
@@ -37,6 +38,20 @@ function create(params) {
             if (err) deferred.reject(err.name + ': ' + err.message);
 
             deferred.resolve(doc);
+        });
+
+    return deferred.promise;
+}
+
+function _delete(_id) {
+    var deferred = Q.defer();
+
+    db.documents.remove(
+        { _id: mongo.helper.toObjectID(_id) },
+        function (err) {
+            if (err) deferred.reject(err.name + ': ' + err.message);
+
+            deferred.resolve();
         });
 
     return deferred.promise;

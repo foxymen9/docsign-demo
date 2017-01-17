@@ -11,35 +11,47 @@ router.get('/', function (req, res) {
     delete req.session.success;
     delete req.session.error;
 
-    res.render('upload', viewData);
+    return render(req, res, viewData);
+});
+
+router.get('/delete/:documentId', function (req, res) {
+    var documentId = req.params.documentId;
+    
+    documentService.delete(documentId)
+        .then(function () {
+            return res.redirect('/upload');
+        })
+        .catch(function (err) {
+            return render(req, res, {error: err.message});
+        });
 });
 
 router.post('/', function (req, res) {
     var documentName = req.body.documentName;
 
     if(!req.files.uploadFile) {
-        res.render('upload', {error: "Please upload a docx file.", documentName: documentName});
+        return render(req, res, {error: "Please upload a docx file.", documentName: documentName});
     }
     else {
         var uploadFile = req.files.uploadFile;
         var exts = ['.docx', '.pdf', '.png', '.jpg', '.jpeg'];
         
         if(exts.indexOf(path.extname(uploadFile.name)) === -1) {
-            res.render('upload', {error: "Please upload a file in formats " + exts.join(', '), documentName: documentName});
+            return render(req, res, {error: "Please upload a file in formats " + exts.join(', '), documentName: documentName});
         }
         else {
             var newPath = '/uploads/documents/' + req.files.uploadFile.name;
             uploadFile.mv('public' + newPath, function(writeErr) {
                 if(writeErr) {
-                    res.render('upload', {error: writeErr.message, documentName: documentName});
+                    return render(req, res, {error: writeErr.message, documentName: documentName});
                 }
                 else {
                     documentService.create({name: documentName, url: newPath})
                         .then(function (document) {
-                            res.render('upload', {success: 'Upload successful'});
+                            return res.redirect('/upload');
                         })
                         .catch(function (err) {
-                            res.render('upload', {error: err.message, documentName: documentName});
+                            return render(req, res, {error: err.message, documentName: documentName});
                         });
                 }
             });
@@ -47,6 +59,22 @@ router.post('/', function (req, res) {
     }
     
 });
+
+function render(req, res, renderData) {
+    documentService.findAll()
+        .then(function (documents) {
+            if (documents) {
+                renderData.documents = documents;
+            } else {
+                renderData.documents = [];
+            }
+            res.render('upload', renderData);
+        })
+        .catch(function (err) {
+            renderData.error = err.message;
+            res.render('upload', renderData);
+        });
+}
 
 
 module.exports = router;
