@@ -22,9 +22,10 @@ router.post('/', function (req, res) {
     }
     else {
         var uploadFile = req.files.uploadFile;
+        var exts = ['.docx', '.pdf', '.png', '.jpg', '.jpeg'];
         
-        if(path.extname(uploadFile.name) !== '.docx') {
-            res.render('upload', {error: "Please upload a docx file.", documentName: documentName});
+        if(exts.indexOf(path.extname(uploadFile.name)) === -1) {
+            res.render('upload', {error: "Please upload a file in formats " + exts.join(', '), documentName: documentName});
         }
         else {
             var newPath = '/uploads/documents/' + req.files.uploadFile.name;

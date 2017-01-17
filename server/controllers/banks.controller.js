@@ -47,9 +47,9 @@ router.post('/', function (req, res) {
     }
     else {
         var uploadFile = req.files.uploadFile;
-        var images = ['.png', '.jpg', '.jpeg'];
+        var exts = ['.png', '.jpg', '.jpeg'];
         
-        if(images.indexOf(path.extname(uploadFile.name)) === -1) {
+        if(exts.indexOf(path.extname(uploadFile.name)) === -1) {
             res.render('banks', {error: "Please upload a image file.", bankName: bankName, color: color});
         }
         else {

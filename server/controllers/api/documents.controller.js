@@ -6,9 +6,11 @@ var Docxtemplater = require('docxtemplater');
 var ImageModule = require('docxtemplater-image-module');
 var JSZip = require('jszip');
 var ImageSize = require('image-size');
+var moment = require('moment');
 
 var utils = require('server/utils');
 var documentService = require('server/services/document.service');
+var userService = require('server/services/user.service');
 
 // routes
 router.get('/', getAllDocuments);
@@ -24,44 +26,62 @@ var signedDocfile = '/temp/template_signed.docx';
 function addSignature(req, res) {
     var signature = req.body.signature;
     var employeeName = req.body.employeeName;
-
-    try {
-        var imageBuffer = utils.decodeBase64Image(signature);
-
-        var options = {
-            centered: false,
-            getImage: function(tagValue, tagName) {
-                return imageBuffer.data;
-            },
-            getSize: function(img, tagValue, tagName) {
-                var size = ImageSize(img);
-                return [size.width, size.height];
-            }
-        };
-
-        var imageModule = new ImageModule(options);
-        
-        var content = fs.readFileSync('public' + testDocfile, 'binary');
     
-        var zip = new JSZip(content);
-        var docx = new Docxtemplater()
-            .attachModule(imageModule)
-            .loadZip(zip)
-            .setData({signature: 'public' + signatureFilePath, employee_name: employeeName})
-            .render();
+    userService.getById(req.user.sub)
+        .then(function (user) {
+            if (user) {
+                try {
+                    var imageBuffer = utils.decodeBase64Image(signature);
 
-        var buffer= docx
-            .getZip()
-            .generate({type:"nodebuffer"});
+                    var options = {
+                        centered: false,
+                        getImage: function(tagValue, tagName) {
+                            return imageBuffer.data;
+                        },
+                        getSize: function(img, tagValue, tagName) {
+                            var size = ImageSize(img);
+                            return [size.width, size.height];
+                        }
+                    };
 
-        fs.writeFileSync('public' + signedDocfile, buffer);
+                    var imageModule = new ImageModule(options);
+                    
+                    var content = fs.readFileSync('public' + testDocfile, 'binary');
+                    var signData = {
+                        signature: 'public' + signatureFilePath, 
+                        employee_name: employeeName, 
+                        full_name: user.firstName + ' ' + user.lastName, 
+                        sign_date: moment().format('dddd, MMMM Do YYYY')
+                    };
+                
+                    var zip = new JSZip(content);
+                    var docx = new Docxtemplater()
+                        .attachModule(imageModule)
+                        .loadZip(zip)
+                        .setData(signData)
+                        .render();
 
-        res.send(signedDocfile);
-    }
-    catch(error) {
-        console.log(error);
-        res.status(404).send(error);
-    }
+                    var buffer= docx
+                        .getZip()
+                        .generate({type:"nodebuffer"});
+
+                    fs.writeFileSync('public' + signedDocfile, buffer);
+
+                    res.send(signedDocfile);
+                }
+                catch(error) {
+                    console.log(error);
+                    res.status(404).send(error);
+                }
+            } else {
+                res.sendStatus(404);
+            }
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+
+    
 }
 
 function upload(req, res) {
